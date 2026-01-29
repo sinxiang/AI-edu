@@ -1,131 +1,95 @@
 // components/library/ReadingPanel.tsx
-import { ChevronRight } from "lucide-react";
+import { Switch } from "@/components/ui/switch";
+import { Label } from "@/components/ui/label";
+import { Button } from "@/components/ui/button";
+import { ChevronLeft, ChevronRight, BookOpen } from "lucide-react";
 import { ReadingAssistant } from "./ReadingAssistant";
 
 interface ReadingPanelProps {
     selectedText: string;
-    onSelectText: (text: string) => void;
-    onSetAiInput: (text: string) => void;
+    onSelectText: (t: string) => void;
+    onSetAiInput: (t: string) => void;
     noteInput: string;
-    setNoteInput: (value: string) => void;
+    setNoteInput: (v: string) => void;
     onAddNote: () => void;
     showReadingAssistant: boolean;
-    setShowReadingAssistant: (show: boolean) => void;
+    setShowReadingAssistant: (s: boolean) => void;
 }
 
 export function ReadingPanel({
-    selectedText,
-    onSelectText,
-    onSetAiInput,
-    noteInput,
-    setNoteInput,
-    onAddNote,
-    showReadingAssistant,
-    setShowReadingAssistant
+    selectedText, onSelectText, onSetAiInput,
+    noteInput, setNoteInput, onAddNote,
+    showReadingAssistant, setShowReadingAssistant
 }: ReadingPanelProps) {
-    const selectTextForAI = (text: string) => {
-        onSelectText(text);
-        onSetAiInput(`关于这段内容："${text.substring(0, 100)}..." 请帮我解释一下`);
-    };
-
-    const handleQuickQuestion = (question: string) => {
-        onSetAiInput(question);
-    };
-
     return (
-        <div className="flex-1 flex overflow-hidden">
-            <div className="flex-1 overflow-y-auto p-6">
-                <div className="max-w-4xl mx-auto">
-                    <div className="mb-8">
-                        <h1 className="text-2xl font-bold text-foreground mb-2">深度阅读模式</h1>
-                        <p className="text-muted-foreground">选中文本可在右侧边栏提问或做笔记</p>
-                    </div>
-
-                    <div className="prose prose-lg max-w-none">
-                        <div className="bg-card border border-border rounded-xl p-8">
-                            <h2 className="text-2xl font-bold mb-6">《百年孤独》第一章：家族起源的魔幻叙事</h2>
-
-                            <div className="mb-6">
-                                <h3 className="text-xl font-semibold mb-3">第一节：马孔多的建立</h3>
-
-                                <p className="mb-4">
-                                    多年以后，奥雷里亚诺·布恩迪亚上校面对行刑队，准会想起父亲带他去见识冰块的那个遥远的下午。
-                                </p>
-
-                                <div
-                                    className="p-4 bg-muted/50 rounded-lg border border-border my-4 cursor-pointer hover:bg-muted transition-colors"
-                                    onClick={() => selectTextForAI("多年以后，奥雷里亚诺·布恩迪亚上校面对行刑队，准会想起父亲带他去见识冰块的那个遥远的下午。")}
-                                >
-                                    <p className="text-lg text-center italic text-foreground">
-                                        "多年以后，奥雷里亚诺·布恩迪亚上校面对行刑队，准会想起父亲带他去见识冰块的那个遥远的下午。"
-                                    </p>
-                                    <p className="text-sm text-muted-foreground text-center mt-2">
-                                        点击选中这个经典开头向AI提问
-                                    </p>
-                                </div>
-
-                                <p className="mb-4">
-                                    那时的马孔多是一个二十户人家的村落，泥巴和芦苇盖成的屋子沿河岸排开，湍急的河水清澈见底，河床里卵石洁白光滑宛如史前巨蛋。
-                                </p>
-
-                                <p className="mb-4">
-                                    世界新生伊始，许多事物还没有名字，提到的时候尚需用手指指点点。每年三月，衣衫褴褛的吉卜赛人都要来村里搭起帐篷，布恩迪亚家族的第一代人何塞·阿尔卡蒂奥·布恩迪亚便因此认识了冰块。
-                                </p>
-
-                                <p className="mb-4">
-                                    当吉卜赛人梅尔基亚德斯把冰块当作"世界上最大的钻石"展示给马孔多人时，何塞·阿尔卡蒂奥·布恩迪亚完全被这神奇的事物迷住了。他抚摸着冰块，说道：
-                                </p>
-
-                                <div className="p-4 bg-muted/50 rounded-lg border border-border my-4 italic">
-                                    "这是我们这个时代最伟大的发明。"然后他在桌面上放上一枚硬币，把冰块摆在上面，让所有人亲眼看着冰块如何在高温中融化成水。
-                                </div>
-
-                                <p className="mb-4">
-                                    这个场景不仅象征了科学与愚昧的冲突，也预示了布恩迪亚家族对于新奇事物的永恒好奇——这种好奇将贯穿七代人的命运，成为他们荣耀与悲剧的源头。
-                                </p>
-                            </div>
-
-                            <div className="mt-8 pt-6 border-t border-border">
-                                <h4 className="font-semibold mb-3">文学要素分析：</h4>
-                                <div className="flex flex-wrap gap-2">
-                                    <button className="px-3 py-1.5 rounded-lg bg-secondary hover:bg-accent text-secondary-foreground hover:text-foreground transition-colors text-sm">
-                                        魔幻现实主义
-                                    </button>
-                                    <button className="px-3 py-1.5 rounded-lg bg-secondary hover:bg-accent text-secondary-foreground hover:text-foreground transition-colors text-sm">
-                                        循环叙事
-                                    </button>
-                                    <button className="px-3 py-1.5 rounded-lg bg-secondary hover:bg-accent text-secondary-foreground hover:text-foreground transition-colors text-sm">
-                                        象征手法
-                                    </button>
-                                    <button className="px-3 py-1.5 rounded-lg bg-secondary hover:bg-accent text-secondary-foreground hover:text-foreground transition-colors text-sm">
-                                        家族史诗
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+        <div className="flex h-full overflow-hidden relative bg-white dark:bg-slate-950">
+            {/* 浮动控制开关 */}
+            <div className="absolute left-6 top-6 z-30 flex items-center gap-3 bg-white/90 dark:bg-slate-900/90 backdrop-blur border p-2 px-4 rounded-full shadow-lg">
+                <Switch
+                    id="assistant-toggle"
+                    checked={showReadingAssistant}
+                    onCheckedChange={setShowReadingAssistant}
+                />
+                <Label htmlFor="assistant-toggle" className="text-xs font-bold cursor-pointer text-foreground">AI 助手 & 笔记</Label>
             </div>
 
-            {showReadingAssistant ? (
-                <ReadingAssistant
-                    selectedText={selectedText}
-                    onClearSelectedText={() => onSelectText("")}
-                    noteInput={noteInput}
-                    setNoteInput={setNoteInput}
-                    onAddNote={onAddNote}
-                    onQuickQuestion={handleQuickQuestion}
-                    onClose={() => setShowReadingAssistant(false)}
-                />
-            ) : (
-                <div className="relative">
-                    <button
-                        onClick={() => setShowReadingAssistant(true)}
-                        className="absolute right-0 top-4 z-10 rounded-l-lg bg-sidebar p-2 text-muted-foreground shadow-lg transition-colors hover:bg-sidebar-accent hover:text-sidebar-foreground"
-                    >
-                        <ChevronRight className="h-5 w-5" />
-                    </button>
+            <div className="flex-1 overflow-y-auto px-12 pt-24 pb-28 scroll-smooth">
+                <article className="max-w-3xl mx-auto prose dark:prose-invert text-lg leading-relaxed text-slate-700 dark:text-slate-300">
+                    <header className="mb-12 border-b pb-8">
+                        <div className="flex items-center gap-2 text-primary mb-2">
+                            <BookOpen className="h-4 w-4" />
+                            <span className="text-sm font-bold uppercase tracking-widest">正在阅读</span>
+                        </div>
+                        <h1 className="text-5xl font-black mb-2 text-slate-900 dark:text-white">《百年孤独》</h1>
+                        <p className="text-slate-500 font-medium">加西亚·马尔克斯 · 第一章</p>
+                    </header>
+
+                    <div className="space-y-8 font-serif">
+                        <p className="text-xl leading-relaxed italic border-l-4 border-primary pl-6 mb-12 cursor-pointer hover:bg-primary/5 transition-colors p-2 rounded"
+                            onClick={() => {
+                                onSelectText("多年以后，奥雷里亚诺·布恩迪亚上校面对行刑队，准会想起父亲带他去见识冰块的那个遥远的下午。");
+                                onSetAiInput("请分析这段文字在文学史上的地位。");
+                            }}>
+                            “多年以后，奥雷里亚诺·布恩迪亚上校面对行刑队，准会想起父亲带他去见识冰块的那个遥远的下午。”
+                        </p>
+
+                        <p>那时的马孔多是一个二十户人家的村落，泥巴和芦苇盖成的屋子沿河岸排开，湍急的河水清澈见底，河床里卵石洁白光滑宛如史前巨蛋。世界新生伊始，许多事物还没有名字，提到的时候尚需用手指指点点。</p>
+
+                        <p>每年三月，一群衣衫褴褛的吉卜赛人会在马孔多河畔扎营，他们总是带来最新的发明。先是磁铁。一个体形庞大的吉卜赛人，蓄着浓密的胡须，双手像麻雀的爪子，自称梅尔基亚德斯，他演示了“世界第八大奇迹”：两个用磁石制成的魔术物品，他称之为“炼金术士的工具”。</p>
+
+                        <p>只要有这两个磁块，梅尔基亚德斯边走边嚷，你们就能开掘出深埋地下的金子。何塞·阿尔卡蒂奥·布恩迪亚——村子的创始人，他那漫无边际的想象力总是超出自然界的力量。他认为磁铁可以用来寻找地下的矿藏。他用两只骡子和几只山羊换来了两个磁石块，甚至不顾妻子乌尔苏拉的劝阻，他确信能靠这个发大财。</p>
+
+                        <p>在那段疯狂的日子里，马孔多的每一寸土地都被他翻了个遍。他日夜不停地挖掘，直到挖出了一副十五世纪的生锈铠甲，里面装着一具挂着铜坠子的骷髅，他才垂头丧气地回到了家。这种对于奇迹的渴望，不仅预示了马孔多的命运，也构成了布恩迪亚家族百年的宿命基调。</p>
+                    </div>
+                </article>
+            </div>
+
+            {/* 底部翻页导航 */}
+            <div className="absolute bottom-0 left-0 right-0 h-16 bg-background/80 backdrop-blur border-t border-border flex justify-center items-center gap-8 z-20">
+                <Button variant="ghost" size="sm" className="gap-2 text-muted-foreground hover:text-foreground">
+                    <ChevronLeft className="h-4 w-4" /> 上一页
+                </Button>
+                <div className="flex items-center gap-2">
+                    <span className="text-sm font-bold text-foreground">04</span>
+                    <span className="text-xs text-muted-foreground">/ 328</span>
                 </div>
+                <Button variant="ghost" size="sm" className="gap-2 text-muted-foreground hover:text-foreground">
+                    下一页 <ChevronRight className="h-4 w-4" />
+                </Button>
+            </div>
+
+            {showReadingAssistant && (
+                <aside className="w-96 border-l bg-card animate-in slide-in-from-right duration-300">
+                    <ReadingAssistant
+                        selectedText={selectedText}
+                        onClearSelectedText={() => onSelectText("")}
+                        noteInput={noteInput}
+                        setNoteInput={setNoteInput}
+                        onAddNote={onAddNote}
+                        onQuickQuestion={(q) => onSetAiInput(q)}
+                        onClose={() => setShowReadingAssistant(false)}
+                    />
+                </aside>
             )}
         </div>
     );

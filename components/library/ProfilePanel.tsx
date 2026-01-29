@@ -1,135 +1,91 @@
 // components/library/ProfilePanel.tsx
-import { Star, BookOpen, Bookmark } from "lucide-react";
+import { Card } from "@/components/ui/card";
+import { Progress } from "@/components/ui/progress";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Clock, BookOpen, StickyNote, Trophy, TrendingUp } from "lucide-react";
+import { Note } from "@/app/library/page";
 
-interface ReadingNote {
-    id: string;
-    content: string;
-    timestamp: string;
-    bookId: string;
-}
+export function ProfilePanel({ notes }: { notes: Note[] }) {
+    const learningStats = [
+        { label: "本月时长", value: "18.5h", icon: Clock, color: "text-blue-500" },
+        { label: "已读书籍", value: "12本", icon: BookOpen, color: "text-emerald-500" },
+        { label: "累计笔记", value: `${notes.length}篇`, icon: StickyNote, color: "text-purple-500" },
+        { label: "学习积分", value: "1,250", icon: Trophy, color: "text-amber-500" },
+    ];
 
-interface ProfilePanelProps {
-    notes: ReadingNote[];
-}
-
-export function ProfilePanel({ notes }: ProfilePanelProps) {
     return (
-        <div className="p-6 h-full overflow-y-auto">
-            <div className="max-w-4xl mx-auto">
-                <div className="mb-8">
-                    <h1 className="text-2xl font-bold text-foreground mb-2">个人信息</h1>
-                    <p className="text-muted-foreground">管理您的个人资料和阅读记录</p>
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-                    <div className="col-span-1 md:col-span-2">
-                        <div className="bg-card border border-border rounded-xl p-6">
-                            <div className="flex items-center gap-4 mb-6">
-                                <div className="w-20 h-20 rounded-full bg-gradient-to-br from-primary to-purple-500 flex items-center justify-center text-white text-2xl font-bold">
-                                    用
-                                </div>
-                                <div>
-                                    <h3 className="text-xl font-bold text-foreground">图书馆用户</h3>
-                                    <p className="text-muted-foreground">高级会员</p>
-                                </div>
-                            </div>
-
-                            <div className="space-y-4">
-                                <div className="grid grid-cols-2 gap-4">
-                                    <div>
-                                        <p className="text-sm text-muted-foreground mb-1">阅读时长</p>
-                                        <p className="font-medium text-foreground">128 小时</p>
-                                    </div>
-                                    <div>
-                                        <p className="text-sm text-muted-foreground mb-1">已读书籍</p>
-                                        <p className="font-medium text-foreground">24 本</p>
-                                    </div>
-                                </div>
-                                <div>
-                                    <p className="text-sm text-muted-foreground mb-1">阅读偏好</p>
-                                    <div className="flex flex-wrap gap-2">
-                                        <span className="px-2 py-1 rounded bg-blue-500/10 text-blue-500 text-xs">学术</span>
-                                        <span className="px-2 py-1 rounded bg-purple-500/10 text-purple-500 text-xs">小说</span>
-                                        <span className="px-2 py-1 rounded bg-emerald-500/10 text-emerald-500 text-xs">文学</span>
-                                    </div>
-                                </div>
-                            </div>
+        <div className="p-6 max-w-5xl mx-auto space-y-6 animate-in fade-in duration-500">
+            {/* 顶部简明学生信息 */}
+            <div className="flex flex-col md:flex-row gap-6">
+                <Card className="flex-1 p-6 bg-slate-900 text-white flex items-center gap-6 overflow-hidden relative border-none">
+                    <div className="absolute top-0 right-0 w-32 h-32 bg-primary/20 blur-3xl -mr-16 -mt-16" />
+                    <Avatar className="h-20 w-20 border-2 border-white/20 shadow-xl">
+                        <AvatarImage src="https://api.dicebear.com/7.x/avataaars/svg?seed=student" />
+                        <AvatarFallback>学</AvatarFallback>
+                    </Avatar>
+                    <div className="relative z-10">
+                        <h2 className="text-2xl font-bold">李华 同学</h2>
+                        <p className="text-slate-400 text-sm mt-1">计算机科学与技术 · 2022级</p>
+                        <div className="flex gap-4 mt-4 text-xs">
+                            <span className="bg-white/10 px-2 py-1 rounded">连续学习 15 天</span>
+                            <span className="bg-white/10 px-2 py-1 rounded">全校排名 Top 5%</span>
                         </div>
                     </div>
+                </Card>
 
-                    <div className="space-y-6">
-                        <div className="bg-card border border-border rounded-xl p-6">
-                            <h4 className="font-medium text-foreground mb-4">阅读统计</h4>
-                            <div className="space-y-4">
-                                <div>
-                                    <div className="flex justify-between text-sm mb-1">
-                                        <span className="text-muted-foreground">本月阅读</span>
-                                        <span className="font-medium">12.5 小时</span>
-                                    </div>
-                                    <div className="h-2 bg-secondary rounded-full overflow-hidden">
-                                        <div className="h-full bg-primary rounded-full" style={{ width: '65%' }} />
-                                    </div>
-                                </div>
-                                <div>
-                                    <div className="flex justify-between text-sm mb-1">
-                                        <span className="text-muted-foreground">笔记数量</span>
-                                        <span className="font-medium">47 篇</span>
-                                    </div>
-                                    <div className="h-2 bg-secondary rounded-full overflow-hidden">
-                                        <div className="h-full bg-emerald-500 rounded-full" style={{ width: '80%' }} />
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div className="bg-card border border-border rounded-xl p-6">
-                            <h4 className="font-medium text-foreground mb-4">成就</h4>
-                            <div className="grid grid-cols-3 gap-2">
-                                <div className="flex flex-col items-center">
-                                    <div className="w-10 h-10 rounded-full bg-amber-500/10 flex items-center justify-center mb-2">
-                                        <Star className="h-5 w-5 text-amber-500" />
-                                    </div>
-                                    <span className="text-xs text-muted-foreground">阅读达人</span>
-                                </div>
-                                <div className="flex flex-col items-center">
-                                    <div className="w-10 h-10 rounded-full bg-blue-500/10 flex items-center justify-center mb-2">
-                                        <BookOpen className="h-5 w-5 text-blue-500" />
-                                    </div>
-                                    <span className="text-xs text-muted-foreground">持续学习</span>
-                                </div>
-                                <div className="flex flex-col items-center">
-                                    <div className="w-10 h-10 rounded-full bg-emerald-500/10 flex items-center justify-center mb-2">
-                                        <Bookmark className="h-5 w-5 text-emerald-500" />
-                                    </div>
-                                    <span className="text-xs text-muted-foreground">笔记大师</span>
-                                </div>
-                            </div>
-                        </div>
+                {/* 学习趋势图简报 */}
+                <Card className="flex-1 p-6 bg-primary/5 border-none flex flex-col justify-between">
+                    <div className="flex justify-between items-center mb-4">
+                        <h3 className="text-sm font-bold flex items-center gap-2">
+                            <TrendingUp className="h-4 w-4 text-primary" /> 最近学习趋势
+                        </h3>
                     </div>
-                </div>
-
-                <div className="bg-card border border-border rounded-xl p-6">
-                    <div className="flex items-center justify-between mb-6">
-                        <h3 className="text-lg font-bold text-foreground">最近笔记</h3>
-                        <button className="text-sm text-primary hover:text-primary/80 transition-colors">
-                            查看全部
-                        </button>
-                    </div>
-                    <div className="space-y-4">
-                        {notes.map((note) => (
-                            <div key={note.id} className="p-4 rounded-lg bg-secondary/30 border border-border">
-                                <p className="text-foreground mb-2">{note.content}</p>
-                                <div className="flex justify-between text-sm">
-                                    <span className="text-muted-foreground">{note.timestamp}</span>
-                                    <button className="text-primary hover:text-primary/80 transition-colors">
-                                        查看详情
-                                    </button>
-                                </div>
-                            </div>
+                    <div className="flex items-end justify-between h-16 gap-1">
+                        {[40, 60, 45, 90, 55, 75, 80].map((val, i) => (
+                            <div
+                                key={i}
+                                className="flex-1 bg-primary/30 hover:bg-primary transition-colors rounded-t-sm"
+                                style={{ height: `${val}%` }}
+                            />
                         ))}
                     </div>
-                </div>
+                </Card>
             </div>
+
+            {/* 数据方块区 */}
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                {learningStats.map((item) => (
+                    <Card key={item.label} className="p-4 text-center hover:bg-muted/50 transition-colors border-border/50">
+                        <item.icon className={`h-5 w-5 mx-auto mb-2 ${item.color}`} />
+                        <p className="text-2xl font-black text-foreground">{item.value}</p>
+                        <p className="text-[10px] uppercase font-bold text-muted-foreground tracking-widest">{item.label}</p>
+                    </Card>
+                ))}
+            </div>
+
+            {/* 进行中的学习进度 */}
+            <Card className="p-6 border-border/50 shadow-sm">
+                <h3 className="font-bold mb-6 text-foreground flex items-center gap-2">
+                    <BookOpen className="h-4 w-4 text-primary" /> 当前阅读进度
+                </h3>
+                <div className="space-y-6">
+                    <div className="space-y-2">
+                        <div className="flex justify-between text-sm">
+                            <span className="font-medium text-foreground">《深度学习》 · 核心理论</span>
+                            <span className="text-blue-500 font-bold">65%</span>
+                        </div>
+                        {/* 通过 Tailwind 选择器修改进度条颜色，解决 indicatorColor 报错 */}
+                        <Progress value={65} className="h-2 bg-slate-100 dark:bg-slate-800 [&_[data-slot=progress-indicator]]:bg-blue-500" />
+                    </div>
+                    <div className="space-y-2">
+                        <div className="flex justify-between text-sm">
+                            <span className="font-medium text-foreground">《百年孤独》 · 经典必读</span>
+                            <span className="text-emerald-500 font-bold">45%</span>
+                        </div>
+                        <Progress value={45} className="h-2 bg-slate-100 dark:bg-slate-800 [&_[data-slot=progress-indicator]]:bg-emerald-500" />
+                    </div>
+                </div>
+            </Card>
         </div>
     );
 }

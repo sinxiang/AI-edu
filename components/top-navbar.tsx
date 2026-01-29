@@ -37,12 +37,7 @@ const navItems: NavItem[] = [
     icon: <Library className="h-4 w-4" />,
   },
   {
-    label: "数据处理",
-    href: "/data",
-    icon: <Database className="h-4 w-4" />,
-  },
-  {
-    label: "智能体创建器",
+    label: "智能体中心",
     href: "/agent-builder",
     icon: <Bot className="h-4 w-4" />,
   },

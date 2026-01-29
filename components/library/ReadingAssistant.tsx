@@ -1,142 +1,76 @@
 // components/library/ReadingAssistant.tsx
-import { Brain, X, Notebook, BookOpen } from "lucide-react";
+import { MessageSquare, StickyNote, X, Send, Sparkles } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 interface ReadingAssistantProps {
     selectedText: string;
     onClearSelectedText: () => void;
     noteInput: string;
-    setNoteInput: (value: string) => void;
+    setNoteInput: (val: string) => void;
     onAddNote: () => void;
-    onQuickQuestion: (question: string) => void;
+    onQuickQuestion: (q: string) => void;
     onClose: () => void;
 }
 
 export function ReadingAssistant({
-    selectedText,
-    onClearSelectedText,
-    noteInput,
-    setNoteInput,
-    onAddNote,
-    onQuickQuestion,
-    onClose
+    selectedText, onClearSelectedText, noteInput, setNoteInput, onAddNote, onQuickQuestion, onClose
 }: ReadingAssistantProps) {
-    const quickQuestions = [
-        {
-            text: "这个开头运用了什么样的叙事技巧？",
-            question: "多年以后，奥雷里亚诺·布恩迪亚上校面对行刑队，准会想起父亲带他去见识冰块的那个遥远的下午。"
-        },
-        {
-            text: "冰块在热带地区出现有什么象征意义？",
-            question: "冰块在小说中有什么象征意义？"
-        },
-        {
-            text: "如何理解魔幻现实主义的文学特征？",
-            question: "魔幻现实主义的特点"
-        }
-    ];
-
     return (
-        <div className="w-96 border-l border-border bg-sidebar overflow-y-auto flex-shrink-0">
-            <div className="p-6">
-                <div className="flex items-center justify-between mb-6">
-                    <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-full bg-gradient-to-br from-primary to-purple-500 flex items-center justify-center">
-                            <Brain className="h-5 w-5 text-white" />
-                        </div>
-                        <div>
-                            <h3 className="font-semibold text-foreground">阅读助手</h3>
-                            <p className="text-sm text-muted-foreground">辅助深度阅读</p>
-                        </div>
-                    </div>
-                    <button
-                        onClick={onClose}
-                        className="p-1.5 rounded-lg text-muted-foreground hover:bg-sidebar-accent hover:text-foreground transition-colors"
-                    >
-                        <X className="h-4 w-4" />
-                    </button>
+        <div className="flex flex-col h-full bg-card border-l border-border">
+            <div className="p-4 border-b border-border flex justify-between items-center bg-background">
+                <div className="flex items-center gap-2">
+                    <Sparkles className="h-5 w-5 text-blue-600 fill-blue-600" />
+                    <span className="font-bold text-foreground">AI 阅读助手</span>
                 </div>
+                <Button variant="ghost" size="icon" onClick={onClose}><X size={18} /></Button>
+            </div>
 
+            <ScrollArea className="flex-1 p-4">
                 {selectedText && (
-                    <div className="mb-6 p-4 rounded-lg bg-muted/50 border border-border">
-                        <div className="flex items-center justify-between mb-2">
-                            <span className="text-sm font-medium text-foreground">已选中内容</span>
-                            <button
-                                onClick={onClearSelectedText}
-                                className="text-xs text-muted-foreground hover:text-foreground"
-                            >
-                                清除
-                            </button>
+                    <div className="mb-6 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-xl border border-blue-100 dark:border-blue-800 animate-in zoom-in-95 duration-300">
+                        <div className="flex justify-between items-start mb-2">
+                            <span className="text-xs font-bold text-blue-600 uppercase">当前选中内容</span>
+                            <button onClick={onClearSelectedText} className="text-blue-400 hover:text-blue-600"><X size={12} /></button>
                         </div>
-                        <p className="text-sm text-foreground italic">"{selectedText.substring(0, 150)}..."</p>
+                        <p className="text-sm italic text-slate-600 dark:text-slate-300 line-clamp-3">"{selectedText}"</p>
                     </div>
                 )}
 
-                <div className="mb-6">
-                    <h4 className="text-sm font-medium text-foreground mb-3">快速提问</h4>
-                    <div className="space-y-3">
-                        {quickQuestions.map((item, index) => (
-                            <button
-                                key={index}
-                                onClick={() => onQuickQuestion(item.question)}
-                                className="w-full text-left p-3 rounded-lg bg-card border border-border hover:bg-accent/50 transition-colors text-sm"
-                            >
-                                {item.text}
-                            </button>
-                        ))}
-                    </div>
-                </div>
+                <Tabs defaultValue="ai" className="w-full">
+                    <TabsList className="grid w-full grid-cols-2 mb-4 bg-muted/50">
+                        <TabsTrigger value="ai" className="gap-2 text-foreground"><MessageSquare size={14} /> 提问 AI</TabsTrigger>
+                        <TabsTrigger value="note" className="gap-2 text-foreground"><StickyNote size={14} /> 记录笔记</TabsTrigger>
+                    </TabsList>
 
-                <div className="mb-6">
-                    <div className="flex items-center justify-between mb-3">
-                        <h4 className="text-sm font-medium text-foreground">阅读笔记</h4>
-                        <Notebook className="h-4 w-4 text-muted-foreground" />
-                    </div>
-                    <div className="space-y-3">
-                        <textarea
+                    <TabsContent value="ai" className="space-y-4">
+                        <div className="grid grid-cols-1 gap-2">
+                            {["总结本段要点", "分析写作风格", "寻找关联背景", "提出深度问题"].map(q => (
+                                <Button key={q} variant="outline" size="sm" className="justify-start text-xs text-muted-foreground h-auto py-2" onClick={() => onQuickQuestion(q)}>
+                                    {q}
+                                </Button>
+                            ))}
+                        </div>
+                        <div className="h-64 border border-border rounded-xl bg-background p-4 text-sm text-muted-foreground italic flex items-center justify-center">
+                            AI 回复将显示在这里。您可以选中文本，或直接提问。
+                        </div>
+                    </TabsContent>
+
+                    <TabsContent value="note" className="space-y-4">
+                        <Textarea
+                            placeholder="记录您的感悟、疑问或思考..."
+                            className="min-h-[200px] resize-none border border-input focus-visible:ring-2 focus-visible:ring-primary/50 bg-background shadow-inner text-foreground"
                             value={noteInput}
                             onChange={(e) => setNoteInput(e.target.value)}
-                            placeholder="记录阅读笔记..."
-                            className="w-full p-3 bg-background border border-input rounded-lg focus:outline-none focus:ring-2 focus:ring-ring text-sm min-h-[120px] resize-none"
                         />
-                        <button
-                            onClick={onAddNote}
-                            className="w-full py-2.5 bg-primary hover:opacity-90 text-primary-foreground rounded-lg font-medium transition-opacity text-sm"
-                        >
-                            保存笔记
-                        </button>
-                    </div>
-                </div>
-
-                <div>
-                    <h4 className="text-sm font-medium text-foreground mb-3">相关资料</h4>
-                    <div className="space-y-3">
-                        <div className="p-3 rounded-lg bg-card border border-border">
-                            <div className="flex items-center gap-2 mb-2">
-                                <div className="p-1 rounded bg-amber-500/10 text-amber-500">
-                                    <BookOpen className="h-3 w-3" />
-                                </div>
-                                <span className="text-sm font-medium">魔幻现实主义文学</span>
-                            </div>
-                            <p className="text-xs text-muted-foreground mb-2">拉丁美洲文学流派特点</p>
-                            <button className="w-full text-xs py-1.5 bg-secondary hover:bg-accent text-secondary-foreground hover:text-foreground rounded transition-colors">
-                                查看资料
-                            </button>
-                        </div>
-                        <div className="p-3 rounded-lg bg-card border border-border">
-                            <div className="flex items-center gap-2 mb-2">
-                                <div className="p-1 rounded bg-purple-500/10 text-purple-500">
-                                    <BookOpen className="h-3 w-3" />
-                                </div>
-                                <span className="text-sm font-medium">马尔克斯作品集</span>
-                            </div>
-                            <p className="text-xs text-muted-foreground mb-2">《霍乱时期的爱情》等作品</p>
-                            <button className="w-full text-xs py-1.5 bg-secondary hover:bg-accent text-secondary-foreground hover:text-foreground rounded transition-colors">
-                                查看作品
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
+                        <Button className="w-full gap-2 bg-primary text-primary-foreground hover:bg-primary/90" onClick={onAddNote}>
+                            <Send size={14} /> 保存笔记
+                        </Button>
+                    </TabsContent>
+                </Tabs>
+            </ScrollArea>
         </div>
     );
 }
