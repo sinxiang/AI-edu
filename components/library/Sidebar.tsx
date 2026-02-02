@@ -18,7 +18,7 @@ export function Sidebar({ activeTab, onTabChange }: SidebarProps) {
         { type: "label", label: "个人空间" },
         { id: "bookshelf", label: "我的书架", icon: Library },
         { id: "notes", label: "我的笔记", icon: StickyNote },
-        { id: "profile", label: "个人信息", icon: User },
+        { id: "profile", label: "阅读记录", icon: User },
     ];
 
     return (
