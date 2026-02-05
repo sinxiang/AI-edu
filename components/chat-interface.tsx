@@ -12,11 +12,17 @@ import {
   Sparkles,
   LibraryBig,
   Zap,
-  ChevronDown
+  ChevronDown,
+  Search,
+  BookOpen,
+  Calendar,
+  Microscope,
+  Lightbulb,
+  MessageSquareText
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-// --- 仅保留全局下拉菜单组件 ---
+// --- 全局功能配置下拉菜单 (保持不变) ---
 function GlobalModuleConfig({
   activeModules,
   onToggle
@@ -80,6 +86,7 @@ function GlobalModuleConfig({
   );
 }
 
+// --- 主页面 LandingSearch ---
 export function LandingSearch({ onStart }: { onStart: () => void }) {
   const [tempInput, setTempInput] = useState("");
   const [showConfig, setShowConfig] = useState(false);
@@ -87,12 +94,34 @@ export function LandingSearch({ onStart }: { onStart: () => void }) {
     agent: true, research: true, assistant: true, library: false
   });
 
+  // 第一层：带彩色图标的类别标签
+  const helperPrompts = [
+    { label: "考试查询", text: "帮我查询最近的考试信息和地点", icon: <Calendar className="h-3 w-3" /> },
+    { label: "学术答疑", text: "请解释一下Transformer架构中的注意力机制", icon: <Lightbulb className="h-3 w-3" /> },
+    { label: "校园安排", text: "学校本周有哪些重要的讲座或学术活动？", icon: <Search className="h-3 w-3" /> },
+    { label: "科研咨询", text: "我想了解关于多模态大模型的最新科研动态", icon: <Microscope className="h-3 w-3" /> },
+    { label: "论文润色", text: "帮我检查并润色这段学术论文的摘要", icon: <BookOpen className="h-3 w-3" /> },
+    { label: "选课咨询", text: "计算机系这学期有哪些推荐的专业选修课？", icon: <GraduationCap className="h-3 w-3" /> },
+  ];
+
+  // 第二层：更具体、更长、灰底的真实问题
+  const detailedQuestions = [
+    "帮我查询下周三《高等数学》考试的具体教室和座位号",
+    "我想知道本学期学生奖学金评定的具体标准和截止日期",
+    "某某教授在《人工智能导论》中提到的反向传播算法是怎么推导的？",
+    "请帮我整理一份关于2026年CVPR会议关于生成式AI的投稿指南",
+    "学校宿舍区域最近的报修服务电话是多少？",
+    "我想办理下周三的调课申请，请告诉我具体操作流程",
+    "解释一下为什么在训练大型语言模型时需要进行RLHF优化",
+    "查询最近一次学术论坛中关于‘碳中和’技术讨论的会议纪要"
+  ];
+
   const activeCount = Object.values(activeModules).filter(Boolean).length;
 
   return (
-    <div className="w-full flex flex-col items-center">
-      {/* 唯一全局入口：右上角避开导航栏 */}
-      <div className="fixed top-20 right-6 z-[90]">
+    <div className="w-full h-full flex flex-col items-center relative overflow-hidden">
+      {/* 全局功能配置按钮 */}
+      <div className="absolute top-6 right-6 z-[90]">
         <div className="relative">
           <button
             onClick={() => setShowConfig(!showConfig)}
@@ -112,35 +141,70 @@ export function LandingSearch({ onStart }: { onStart: () => void }) {
         </div>
       </div>
 
-      <div className="flex flex-col items-center text-center pt-32 pb-20 animate-in fade-in slide-in-from-bottom-8 duration-1000 w-full max-w-4xl px-4">
-        <div className="space-y-6 mb-16">
+      <div className="flex flex-col items-center text-center justify-center flex-1 w-full max-w-5xl px-4 animate-in fade-in duration-1000">
+        <div className="space-y-4 mb-8">
           <h1 className="text-4xl md:text-5xl font-light tracking-tight text-foreground">
             教育，在此<span className="font-semibold text-primary">无缝连接</span>
           </h1>
-          <p className="text-foreground/70 text-base font-normal max-w-xl mx-auto">
+          <p className="text-foreground/60 text-base font-normal max-w-lg mx-auto leading-relaxed">
             覆盖师生全场景的一站式智能空间，让学术与教学更纯粹
           </p>
         </div>
 
-        <div className="w-full max-w-2xl text-left">
-          <div className="relative group flex flex-col w-full bg-card border border-border/80 rounded-[28px] shadow-sm focus-within:shadow-[0_20px_60px_rgba(139,92,246,0.15)] focus-within:border-primary/50 transition-all duration-500 p-2 backdrop-blur-md">
+        {/* 搜索框 */}
+        <div className="w-full max-w-2xl mb-8">
+          <div className="relative group flex flex-col w-full bg-card border border-border/80 rounded-[28px] shadow-sm focus-within:shadow-[0_15px_40px_rgba(var(--primary-rgb),0.08)] focus-within:border-primary/40 transition-all duration-500 p-1.5 backdrop-blur-md">
             <textarea
               rows={3}
               value={tempInput}
               onChange={(e) => setTempInput(e.target.value)}
               placeholder="告诉 EduAI 您想做什么..."
-              className="w-full bg-transparent border-none text-base focus:outline-none px-6 pt-5 resize-none placeholder:text-muted-foreground/50 leading-relaxed text-foreground"
+              className="w-full bg-transparent border-none text-base focus:outline-none px-6 pt-5 resize-none placeholder:text-muted-foreground/30 leading-relaxed"
             />
-            <div className="flex items-center justify-between px-4 pb-3 mt-2">
-              <div className="flex items-center gap-1">
+            <div className="flex items-center justify-between px-4 pb-2 mt-1">
+              <div className="flex items-center gap-0.5">
                 <ToolIconButton icon={<Paperclip className="h-4 w-4" />} label="上传" />
                 <ToolIconButton icon={<Globe className="h-4 w-4" />} label="联网" />
                 <ToolIconButton icon={<Library className="h-4 w-4" />} label="知识库" />
               </div>
-              <button onClick={onStart} className="flex items-center justify-center h-10 w-10 bg-primary text-primary-foreground rounded-full hover:scale-105 transition-all shadow-lg active:scale-95">
+              <button
+                onClick={onStart}
+                className="flex items-center justify-center h-10 w-10 bg-primary text-primary-foreground rounded-full hover:shadow-lg transition-all active:scale-95 shrink-0"
+              >
                 <Send className="h-4 w-4" />
               </button>
             </div>
+          </div>
+        </div>
+
+        {/* 提示词区域容器 */}
+        <div className="w-full max-w-3xl space-y-6">
+          {/* 第一层：类别标签 */}
+          <div className="flex flex-wrap justify-center gap-2">
+            {helperPrompts.map((prompt, idx) => (
+              <button
+                key={idx}
+                onClick={() => setTempInput(prompt.text)}
+                className="flex items-center gap-2 px-3 py-1.5 rounded-full border border-border bg-background/50 text-[11px] text-muted-foreground transition-all hover:bg-primary/5 hover:border-primary/30 hover:text-primary group"
+              >
+                <span className="opacity-70 group-hover:opacity-100">{prompt.icon}</span>
+                <span className="font-medium">{prompt.label}</span>
+              </button>
+            ))}
+          </div>
+
+          {/* 第二层：具体问题建议 (灰底、小小的、更长) */}
+          <div className="flex flex-wrap justify-center gap-x-2 gap-y-2 max-w-4xl mx-auto">
+            {detailedQuestions.map((q, idx) => (
+              <button
+                key={idx}
+                onClick={() => setTempInput(q)}
+                className="flex items-center gap-2 px-3 py-1 rounded-lg bg-muted/40 text-[10.5px] text-muted-foreground/80 hover:bg-muted hover:text-foreground transition-all border border-transparent hover:border-border/50 text-left whitespace-nowrap overflow-hidden"
+              >
+                <MessageSquareText className="h-2.5 w-2.5 opacity-50 shrink-0" />
+                <span className="truncate">{q}</span>
+              </button>
+            ))}
           </div>
         </div>
       </div>
@@ -148,9 +212,10 @@ export function LandingSearch({ onStart }: { onStart: () => void }) {
   );
 }
 
+// --- 对话界面组件 (保持不变) ---
 export function ChatInterface() {
   const [messages, setMessages] = useState([
-    { id: "1", type: "ai", content: "您好，协作对话已开启。当前已同步您的全局功能配置。" }
+    { id: "1", type: "ai", content: "您好，个人空间已为您准备就绪。请问有什么可以帮您？" }
   ]);
   const [inputValue, setInputValue] = useState("");
 
@@ -165,7 +230,7 @@ export function ChatInterface() {
       <div className="flex items-center justify-between border-b border-border/50 px-8 py-5">
         <div className="flex items-center gap-3">
           <div className="h-2 w-2 rounded-full bg-primary" />
-          <h1 className="text-sm font-semibold text-foreground/80 tracking-tight">EduAI 协作中心</h1>
+          <h1 className="text-sm font-semibold text-foreground/80 tracking-tight">协作中心</h1>
         </div>
         <div className="flex items-center gap-2 text-[10px] text-muted-foreground uppercase tracking-widest font-bold">
           <Sparkles className="h-3 w-3 text-primary" /> Active Workspace
@@ -194,7 +259,7 @@ export function ChatInterface() {
             placeholder="输入后续需求..."
             className="flex-1 bg-transparent border-none text-sm focus:outline-none px-4"
           />
-          <button onClick={handleSend} className="h-10 w-10 flex items-center justify-center rounded-xl bg-primary text-primary-foreground hover:opacity-90">
+          <button onClick={handleSend} className="h-10 w-10 flex items-center justify-center rounded-xl bg-primary text-primary-foreground hover:opacity-90 transition-all">
             <Send className="h-4 w-4" />
           </button>
         </div>
@@ -207,7 +272,7 @@ function ToolIconButton({ icon, label }: { icon: React.ReactNode; label: string 
   return (
     <button className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-muted-foreground hover:text-primary hover:bg-primary/5 transition-all">
       {icon}
-      <span className="text-xs font-medium">{label}</span>
+      <span className="text-[10px] font-medium">{label}</span>
     </button>
   );
 }

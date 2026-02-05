@@ -38,65 +38,64 @@ export default function HomePage() {
   };
 
   return (
-    <main className="relative min-h-screen w-full bg-background">
+    <main className="relative h-screen w-full bg-background flex flex-col overflow-hidden">
       {/* Top Navigation Bar */}
       <TopNavbar currentPath="/" />
 
-      {/* Fixed Sidebar */}
-      <ChatSidebar
-        isCollapsed={leftSidebarCollapsed}
-        onToggle={() => setLeftSidebarCollapsed(!leftSidebarCollapsed)}
-        onStartChat={handleStartNewChat}
-        onSelectHistory={handleSelectHistory}
-        onHomeClick={handleHomeClick}
-      />
+      <div className="flex flex-1 overflow-hidden relative">
+        {/* Fixed Sidebar */}
+        <ChatSidebar
+          isCollapsed={leftSidebarCollapsed}
+          onToggle={() => setLeftSidebarCollapsed(!leftSidebarCollapsed)}
+          onStartChat={handleStartNewChat}
+          onSelectHistory={handleSelectHistory}
+          onHomeClick={handleHomeClick}
+        />
 
-      {/* Main Content Area - 根据侧边栏状态设置左边距 */}
-      <div
-        className={cn(
-          "min-h-screen pt-14 transition-all duration-300",
-          leftSidebarCollapsed ? "ml-0" : "ml-64"
-        )}
-      >
-        {!isChatStarted ? (
-          // 初始状态：居中简洁对话框
-          <div className="w-full h-[calc(100vh-56px)] flex items-center justify-center">
-            <div className="w-full max-w-4xl px-4">
-              <LandingSearch onStart={handleStartNewChat} />
-            </div>
+        {/* 核心联动区：使用 flex-1 让中间区域随右侧面板状态自动缩放 */}
+        <div
+          className={cn(
+            "flex flex-1 transition-all duration-300",
+            leftSidebarCollapsed ? "ml-0" : "ml-64"
+          )}
+        >
+          {/* 中间主要内容区：
+              1. flex-1 保证它会自动“避让”右侧面板
+              2. relative 保证了 LandingSearch 内部的 absolute 元素能正确跟随
+          */}
+          <div className="flex-1 flex flex-col min-w-0 pt-14 h-full relative">
+            {!isChatStarted ? (
+              // 初始状态
+              <div className="flex-1 overflow-hidden">
+                <LandingSearch onStart={handleStartNewChat} />
+              </div>
+            ) : (
+              // 对话状态
+              <div className="flex-1 overflow-hidden">
+                {currentChatType === 'new' ? (
+                  <ChatInterface />
+                ) : (
+                  <ChatExample />
+                )}
+              </div>
+            )}
           </div>
-        ) : (
-          // 对话状态
-          <div className="flex h-[calc(100vh-56px)]">
-            {/* 对话主界面 */}
-            <div className="flex-1 overflow-hidden">
-              {currentChatType === 'new' ? (
-                <ChatInterface />
-              ) : (
-                <ChatExample />
-              )}
-            </div>
 
-            {/* 右侧面板 */}
-            <div className="flex">
-              {!rightPanelCollapsed && (
-                <UserDataPanel
-                  isCollapsed={rightPanelCollapsed}
-                  onToggle={() => setRightPanelCollapsed(true)}
-                />
-              )}
-
-              {rightPanelCollapsed && (
-                <div className="relative">
-                  <CollapsedPanelToggle onToggle={() => setRightPanelCollapsed(false)} />
-                </div>
-              )}
-            </div>
+          {/* 右侧面板区：紧贴中间内容区，不再使用 fixed 定位 */}
+          <div className="h-full pt-14 flex items-center bg-background shrink-0">
+            {!rightPanelCollapsed ? (
+              <UserDataPanel
+                isCollapsed={rightPanelCollapsed}
+                onToggle={() => setRightPanelCollapsed(true)}
+              />
+            ) : (
+              <CollapsedPanelToggle onToggle={() => setRightPanelCollapsed(false)} />
+            )}
           </div>
-        )}
+        </div>
       </div>
 
-      {/* 折叠按钮 - 当侧边栏折叠时显示 */}
+      {/* 左侧折叠按钮 - 当左侧边栏折叠时显示 */}
       {leftSidebarCollapsed && (
         <CollapsedToggle onToggle={() => setLeftSidebarCollapsed(false)} />
       )}

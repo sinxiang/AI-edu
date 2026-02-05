@@ -25,16 +25,21 @@ import {
     Crown,
     Rocket,
     Target,
-    Brain,
-    Code,
-    Palette,
-    Flame as
-        Star
+    HardDrive,
+    Trash2,
+    Download,
+    FolderPlus,
+    Upload,
+    FileText,
+    MoreVertical,
+    Flame as Star
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 
-// 定义视图类型
-type ViewType = "favorites" | "agents" | "knowledge" | "my-team" | "hot-agents";
+// 定义视图类型，增加 personal-library
+type ViewType = "favorites" | "agents" | "knowledge" | "personal-library" | "my-team" | "hot-agents";
 
 export default function AgentBuilderPage() {
     const [activeView, setActiveView] = useState<ViewType>("hot-agents");
@@ -67,9 +72,83 @@ export default function AgentBuilderPage() {
         { name: "数据分析", count: 98 },
     ];
 
+    // 个人知识库内部页面组件
+    const PersonalLibraryContent = () => {
+        const [files] = useState([
+            { id: "1", name: "2026年深度学习综述.pdf", size: "2.4 MB", date: "2026-02-01", type: "PDF" },
+            { id: "2", name: "毕业论文初稿_v1.docx", size: "85 KB", date: "2026-01-28", type: "DOCX" },
+            { id: "3", name: "实验数据集A.csv", size: "12.1 MB", date: "2026-02-03", type: "CSV" },
+        ]);
+
+        return (
+            <div className="h-full flex flex-col bg-background p-8 overflow-hidden animate-in fade-in duration-500">
+                <div className="flex items-end justify-between mb-8">
+                    <div className="space-y-1">
+                        <h1 className="text-2xl font-bold tracking-tight flex items-center gap-2">
+                            <HardDrive className="h-6 w-6 text-primary" /> 个人知识库
+                        </h1>
+                        <p className="text-sm text-muted-foreground">存储您的私有资料，用于定制化训练或背景增强。</p>
+                    </div>
+                    <div className="flex gap-2">
+                        <Button variant="outline" size="sm" className="rounded-full px-4"><FolderPlus className="h-4 w-4 mr-2" /> 新建文件夹</Button>
+                        <Button size="sm" className="rounded-full px-4 shadow-md bg-primary hover:bg-primary/90 text-white"><Upload className="h-4 w-4 mr-2" /> 上传资料</Button>
+                    </div>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                    <div className="bg-card border rounded-2xl p-4 flex items-center gap-4">
+                        <div className="h-10 w-10 rounded-xl bg-blue-500/10 text-blue-600 flex items-center justify-center font-bold text-lg">12</div>
+                        <div><p className="text-xs text-muted-foreground uppercase font-bold">已上传文档</p></div>
+                    </div>
+                    <div className="bg-card border rounded-2xl p-4 flex items-center gap-4">
+                        <div className="h-10 w-10 rounded-xl bg-emerald-500/10 text-emerald-600 flex items-center justify-center font-bold text-lg">1.2G</div>
+                        <div><p className="text-xs text-muted-foreground uppercase font-bold">已用空间</p></div>
+                    </div>
+                    <div className="relative group md:col-span-1">
+                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground group-focus-within:text-primary" />
+                        <input
+                            placeholder="搜索我的文件..."
+                            className="w-full h-full min-h-[50px] bg-card border rounded-2xl pl-10 pr-4 text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all"
+                        />
+                    </div>
+                </div>
+
+                <div className="flex-1 bg-card border rounded-2xl overflow-hidden flex flex-col shadow-sm">
+                    <div className="grid grid-cols-12 gap-4 px-6 py-4 bg-muted/30 border-b text-[10px] font-bold text-muted-foreground uppercase tracking-widest">
+                        <div className="col-span-6">文件名称</div>
+                        <div className="col-span-2">大小</div>
+                        <div className="col-span-2">上传日期</div>
+                        <div className="col-span-2 text-right">操作</div>
+                    </div>
+                    <div className="flex-1 overflow-y-auto divide-y divide-border/50">
+                        {files.map((file) => (
+                            <div key={file.id} className="grid grid-cols-12 gap-4 px-6 py-4 items-center hover:bg-muted/20 transition-all group">
+                                <div className="col-span-6 flex items-center gap-3">
+                                    <div className="h-10 w-10 rounded-lg bg-primary/5 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-white transition-colors">
+                                        <FileText className="h-5 w-5" />
+                                    </div>
+                                    <div>
+                                        <p className="text-sm font-semibold text-foreground leading-none mb-1.5">{file.name}</p>
+                                        <Badge variant="secondary" className="text-[9px] h-3.5 px-1.5 font-mono">{file.type}</Badge>
+                                    </div>
+                                </div>
+                                <div className="col-span-2 text-xs text-muted-foreground font-mono">{file.size}</div>
+                                <div className="col-span-2 text-xs text-muted-foreground font-mono">{file.date}</div>
+                                <div className="col-span-2 flex justify-end gap-1 opacity-0 group-hover:opacity-100 transition-all">
+                                    <Button variant="ghost" size="icon" className="h-8 w-8 hover:text-primary"><Download className="h-4 w-4" /></Button>
+                                    <Button variant="ghost" size="icon" className="h-8 w-8 hover:text-destructive"><Trash2 className="h-4 w-4" /></Button>
+                                    <Button variant="ghost" size="icon" className="h-8 w-8"><MoreVertical className="h-4 w-4" /></Button>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            </div>
+        );
+    };
+
     // 渲染主内容区域
     const renderContent = () => {
-        // 智能体广场视图 (原热门智能体)
         if (activeView === "hot-agents") {
             return (
                 <div className="flex-1 overflow-y-auto bg-gradient-to-b from-background via-background to-muted/10 pb-10">
@@ -147,12 +226,9 @@ export default function AgentBuilderPage() {
                         </div>
 
                         <div className="flex gap-8">
-                            {/* 左侧主要区域 */}
                             <div className="flex-1 min-w-0 space-y-8">
-                                {/* 控制工具栏 */}
                                 <div className="bg-card border border-border rounded-2xl p-6 space-y-6">
                                     <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-                                        {/* 搜索框 */}
                                         <div className="relative w-full md:w-96">
                                             <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                                             <input
@@ -164,7 +240,6 @@ export default function AgentBuilderPage() {
                                             />
                                         </div>
 
-                                        {/* 排序和视图切换 */}
                                         <div className="flex items-center gap-4">
                                             <div className="flex items-center gap-2">
                                                 <Filter className="h-4 w-4 text-muted-foreground" />
@@ -209,7 +284,6 @@ export default function AgentBuilderPage() {
                                         </div>
                                     </div>
 
-                                    {/* 热门话题 */}
                                     <div>
                                         <div className="flex items-center gap-2 mb-3">
                                             <Flame className="h-4 w-4 text-orange-500" />
@@ -234,7 +308,6 @@ export default function AgentBuilderPage() {
                                     </div>
                                 </div>
 
-                                {/* 智能体展示区 */}
                                 <div>
                                     <div className="flex items-center justify-between mb-6">
                                         <h3 className="text-xl font-bold">推荐智能体</h3>
@@ -249,9 +322,7 @@ export default function AgentBuilderPage() {
                                 </div>
                             </div>
 
-                            {/* 右侧边栏 */}
                             <aside className="w-80 shrink-0 space-y-6 hidden xl:block">
-                                {/* 热度排行榜 */}
                                 <div className="rounded-2xl border border-border bg-card p-6 shadow-sm">
                                     <div className="flex items-center justify-between mb-6">
                                         <div className="flex items-center gap-2">
@@ -284,7 +355,6 @@ export default function AgentBuilderPage() {
                                     </div>
                                 </div>
 
-                                {/* 快速开始 */}
                                 <div className="rounded-2xl border border-dashed border-primary/40 bg-primary/5 p-6">
                                     <div className="flex items-center gap-3 mb-4">
                                         <div className="p-2 rounded-lg bg-primary/10 text-primary">
@@ -293,7 +363,7 @@ export default function AgentBuilderPage() {
                                         <h3 className="font-bold">快速开始</h3>
                                     </div>
                                     <p className="text-sm text-muted-foreground mb-4">创建你的第一个AI智能体，仅需3分钟</p>
-                                    <button className="w-full py-3 bg-primary hover:bg-primary/90 text-primary-foreground rounded-xl font-medium transition-colors">
+                                    <button className="w-full py-3 bg-primary hover:bg-primary/90 text-primary-foreground rounded-xl font-medium transition-colors text-white">
                                         立即创建
                                     </button>
                                 </div>
@@ -304,7 +374,12 @@ export default function AgentBuilderPage() {
             );
         }
 
-        // 其他视图保持不变...
+        // 个人知识库逻辑
+        if (activeView === "personal-library") {
+            return <PersonalLibraryContent />;
+        }
+
+        // 其他视图
         const imageMap: Record<string, string> = {
             "favorites": "收藏夹.jpg",
             "agents": "智能体.jpg",
@@ -330,11 +405,11 @@ export default function AgentBuilderPage() {
             <TopNavbar currentPath="/agent-builder" />
 
             <div className="flex-1 flex pt-14 min-h-0 overflow-hidden">
-                {/* 左侧侧边栏 - 保持原有样式 */}
+                {/* 左侧侧边栏 */}
                 <div className="w-64 border-r border-border bg-card flex flex-col flex-shrink-0">
-                    <div className="flex-1 overflow-y-auto p-4 space-y-4">
+                    <div className="flex-1 overflow-y-auto p-4 space-y-4 text-left">
 
-                        {/* 第一部分：智能体广场 (原热门智能体，移至最上方) */}
+                        {/* 第一部分：智能体广场 */}
                         <div className="pb-2 border-b border-border/50">
                             <button
                                 onClick={() => setActiveView("hot-agents")}
@@ -374,11 +449,19 @@ export default function AgentBuilderPage() {
                                         active={activeView === "agents"}
                                         onClick={() => setActiveView("agents")}
                                     />
+                                    {/* 公共知识库 - 更名 */}
                                     <SidebarItem
                                         icon={<Database className="h-4 w-4" />}
-                                        label="智能体知识库"
+                                        label="公共知识库"
                                         active={activeView === "knowledge"}
                                         onClick={() => setActiveView("knowledge")}
+                                    />
+                                    {/* 个人知识库 - 新增 */}
+                                    <SidebarItem
+                                        icon={<HardDrive className="h-4 w-4" />}
+                                        label="个人知识库"
+                                        active={activeView === "personal-library"}
+                                        onClick={() => setActiveView("personal-library")}
                                     />
                                 </div>
                             )}
@@ -410,7 +493,7 @@ export default function AgentBuilderPage() {
                 </div>
 
                 {/* 右侧主内容区 */}
-                <div className="flex-1 flex flex-col min-h-0 bg-muted/5">
+                <div className="flex-1 flex flex-col min-0 bg-muted/5">
                     {renderContent()}
                 </div>
             </div>
@@ -418,7 +501,7 @@ export default function AgentBuilderPage() {
     );
 }
 
-// 侧边栏按钮子项 - 保持原有样式
+// 侧边栏按钮子项
 function SidebarItem({
     icon,
     label,
