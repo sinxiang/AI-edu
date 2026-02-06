@@ -12,10 +12,12 @@ import {
   ClipboardList,
   FileText,
   ExternalLink,
-  CircleCheck,
-  Circle,
   User,
-  Layout
+  Layout,
+  Timer,
+  CheckCircle2,
+  XCircle,
+  ArrowUpRight
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -47,13 +49,37 @@ const detailedNotifications = [
 const todayCourses = [
   { id: "1", time: "10:00-11:30", name: "机器学习", location: "教301", active: false },
   { id: "2", time: "14:00-15:30", name: "深度学习理论", location: "实404", active: true },
-  { id: "3", time: "16:00-17:30", name: "自然语言处理", location: "研201", active: false },
 ];
 
-// 待办事项数据
-const todoTasks = [
-  { id: "t1", title: "完成神经网络课后习题", deadline: "今天 23:59", done: false },
-  { id: "t2", title: "预习 Transformer 架构", deadline: "周四", done: true },
+// 办事/审批进度数据
+const processTasks = [
+  {
+    id: "p1",
+    title: "创新创业奖学金申请",
+    status: "processing",
+    statusText: "审批中",
+    time: "2026-02-05",
+    node: "院系审核阶段",
+    color: "text-amber-500 bg-amber-500/10"
+  },
+  {
+    id: "p2",
+    title: "校外实践请假申请",
+    status: "approved",
+    statusText: "已通过",
+    time: "2026-02-04",
+    node: "流程已结束",
+    color: "text-emerald-500 bg-emerald-500/10"
+  },
+  {
+    id: "p3",
+    title: "实验室设备借用预约",
+    status: "rejected",
+    statusText: "已驳回",
+    time: "2026-02-02",
+    node: "原因：库存不足",
+    color: "text-rose-500 bg-rose-500/10"
+  },
 ];
 
 interface UserDataPanelProps {
@@ -111,9 +137,7 @@ export function UserDataPanel({ isCollapsed, onToggle }: UserDataPanelProps) {
             <div className="space-y-4">
               <h3 className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider">最新动态</h3>
               {detailedNotifications.map((n) => (
-                <div key={n.id} className={cn(
-                  "group rounded-xl border p-3.5 transition-all hover:border-primary/30 bg-card border-border shadow-sm"
-                )}>
+                <div key={n.id} className="group rounded-xl border p-3.5 transition-all hover:border-primary/30 bg-card border-border shadow-sm">
                   <div className="flex justify-between items-start mb-2">
                     <Badge variant={n.type === 'school' ? 'outline' : 'secondary'} className="text-[9px] h-4">
                       {n.type === 'school' ? '全校' : '课程'}
@@ -152,25 +176,28 @@ export function UserDataPanel({ isCollapsed, onToggle }: UserDataPanelProps) {
                 </div>
               </div>
 
-              {/* 待办事项板块 - 重新添加此处 */}
+              {/* 办事进度板块 - 核心修改处 */}
               <div>
-                <h3 className="mb-3 text-[11px] font-semibold text-muted-foreground uppercase tracking-wider">待办事项</h3>
-                <div className="space-y-2">
-                  {todoTasks.map(task => (
-                    <div key={task.id} className="flex items-start gap-3 p-2.5 rounded-lg border border-transparent hover:border-border hover:bg-muted/30 transition-all group">
-                      {task.done ? (
-                        <CircleCheck className="h-4 w-4 text-emerald-500 mt-0.5 shrink-0" />
-                      ) : (
-                        <Circle className="h-4 w-4 text-muted-foreground/50 mt-0.5 shrink-0" />
-                      )}
-                      <div className="flex-1 min-w-0">
-                        <p className={cn(
-                          "text-xs truncate transition-colors",
-                          task.done ? "line-through text-muted-foreground" : "font-medium text-foreground"
-                        )}>
-                          {task.title}
-                        </p>
-                        <p className="text-[10px] text-muted-foreground">截止日期: {task.deadline}</p>
+                <h3 className="mb-3 text-[11px] font-semibold text-muted-foreground uppercase tracking-wider">办事进度</h3>
+                <div className="space-y-3">
+                  {processTasks.map(task => (
+                    <div key={task.id} className="p-3.5 rounded-xl border border-border bg-card shadow-sm hover:border-primary/20 transition-all group">
+                      <div className="flex items-start justify-between mb-2.5">
+                        <div className="flex-1 min-w-0">
+                          <h4 className="text-xs font-bold truncate group-hover:text-primary transition-colors">{task.title}</h4>
+                          <span className="text-[10px] text-muted-foreground font-mono">{task.time}</span>
+                        </div>
+                        <Badge className={cn("text-[9px] h-4.5 px-2 border-none shadow-none", task.color)}>
+                          {task.statusText}
+                        </Badge>
+                      </div>
+
+                      <div className="flex items-center gap-3 p-2 bg-muted/30 rounded-lg">
+                        {task.status === 'processing' && <Timer className="h-3.5 w-3.5 text-amber-500 animate-spin-slow" />}
+                        {task.status === 'approved' && <CheckCircle2 className="h-3.5 w-3.5 text-emerald-500" />}
+                        {task.status === 'rejected' && <XCircle className="h-3.5 w-3.5 text-rose-500" />}
+                        <span className="text-[10px] font-medium text-foreground/80">{task.node}</span>
+                        <ArrowUpRight className="ml-auto h-3 w-3 text-muted-foreground/50 opacity-0 group-hover:opacity-100 transition-all" />
                       </div>
                     </div>
                   ))}

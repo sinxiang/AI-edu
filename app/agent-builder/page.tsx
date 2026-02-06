@@ -152,7 +152,7 @@ export default function AgentBuilderPage() {
         if (activeView === "hot-agents") {
             return (
                 <div className="flex-1 overflow-y-auto bg-gradient-to-b from-background via-background to-muted/10 pb-10">
-                    <div className="max-w-[1600px] mx-auto p-8 space-y-10">
+                    <div className="w-full max-w-[1600px] mx-auto p-4 md:p-8 space-y-10">
                         {/* 顶部展示 Banner */}
                         <section className="relative h-48 rounded-2xl bg-gradient-to-r from-primary via-purple-500 to-pink-500 overflow-hidden text-white p-10 flex items-center justify-between shadow-lg">
                             <div className="relative z-10 max-w-2xl">
@@ -225,149 +225,133 @@ export default function AgentBuilderPage() {
                             </div>
                         </div>
 
-                        <div className="flex gap-8">
-                            <div className="flex-1 min-w-0 space-y-8">
-                                <div className="bg-card border border-border rounded-2xl p-6 space-y-6">
-                                    <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-                                        <div className="relative w-full md:w-96">
-                                            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-                                            <input
-                                                type="text"
-                                                value={searchQuery}
-                                                onChange={(e) => setSearchQuery(e.target.value)}
-                                                placeholder="搜索 AI 智能体..."
-                                                className="w-full rounded-xl border border-border bg-background px-4 py-3 pl-10 text-sm focus:outline-none focus:ring-2 focus:ring-primary/20"
-                                            />
+                        {/* 横向热度排行榜 */}
+                        <div className="bg-card border border-border rounded-2xl p-6 shadow-sm">
+                            <div className="flex items-center justify-between mb-6">
+                                <div className="flex items-center gap-2">
+                                    <Flame className="h-5 w-5 text-orange-500" />
+                                    <h3 className="font-bold text-lg">全站热度排行榜</h3>
+                                </div>
+                                <TrendingUp className="h-4 w-4 text-muted-foreground" />
+                            </div>
+                            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-4">
+                                {[
+                                    { rank: 1, name: "代码导师", score: "9,850", color: "bg-amber-500" },
+                                    { rank: 2, name: "英语口语练习助手", score: "8,920", color: "bg-slate-400" },
+                                    { rank: 3, name: "学习规划师", score: "7,540", color: "bg-orange-400" },
+                                    { rank: 4, name: "日程管家", score: "6,210", color: "bg-secondary" },
+                                    { rank: 5, name: "健身教练", score: "5,800", color: "bg-secondary" }
+                                ].map((item) => (
+                                    <div key={item.rank} className="flex items-center gap-4 group cursor-pointer p-2 rounded-lg hover:bg-muted/50 transition-colors">
+                                        <div className={cn(
+                                            "w-6 h-6 shrink-0 flex items-center justify-center rounded-full text-[10px] font-bold text-white",
+                                            item.rank > 3 ? "bg-muted text-muted-foreground" : item.color
+                                        )}>
+                                            {item.rank}
                                         </div>
-
-                                        <div className="flex items-center gap-4">
-                                            <div className="flex items-center gap-2">
-                                                <Filter className="h-4 w-4 text-muted-foreground" />
-                                                <div className="flex items-center gap-1">
-                                                    {sortOptions.map((option) => (
-                                                        <button
-                                                            key={option.id}
-                                                            onClick={() => setSortBy(option.id)}
-                                                            className={cn(
-                                                                "flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm transition-all",
-                                                                sortBy === option.id
-                                                                    ? "bg-primary/10 text-primary font-medium"
-                                                                    : "text-muted-foreground hover:text-foreground hover:bg-secondary"
-                                                            )}
-                                                        >
-                                                            {option.icon}
-                                                            <span>{option.label}</span>
-                                                        </button>
-                                                    ))}
-                                                </div>
-                                            </div>
-                                            <div className="flex items-center gap-2">
-                                                <button
-                                                    onClick={() => setViewMode("grid")}
-                                                    className={cn(
-                                                        "p-2 rounded-lg transition-colors",
-                                                        viewMode === "grid" ? "bg-primary/10 text-primary" : "hover:bg-secondary"
-                                                    )}
-                                                >
-                                                    <Grid className="h-4 w-4" />
-                                                </button>
-                                                <button
-                                                    onClick={() => setViewMode("list")}
-                                                    className={cn(
-                                                        "p-2 rounded-lg transition-colors",
-                                                        viewMode === "list" ? "bg-primary/10 text-primary" : "hover:bg-secondary"
-                                                    )}
-                                                >
-                                                    <List className="h-4 w-4" />
-                                                </button>
-                                            </div>
+                                        <div className="flex-1 min-w-0">
+                                            <p className="text-sm font-medium truncate group-hover:text-primary transition-colors">{item.name}</p>
+                                            <p className="text-[10px] text-muted-foreground uppercase">Popularity {item.score}</p>
                                         </div>
                                     </div>
+                                ))}
+                            </div>
+                        </div>
 
-                                    <div>
-                                        <div className="flex items-center gap-2 mb-3">
-                                            <Flame className="h-4 w-4 text-orange-500" />
-                                            <span className="text-sm font-medium">热门话题</span>
+                        <div className="flex flex-col space-y-8">
+                            <div className="bg-card border border-border rounded-2xl p-6 space-y-6">
+                                <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                                    <div className="relative w-full md:w-96">
+                                        <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                                        <input
+                                            type="text"
+                                            value={searchQuery}
+                                            onChange={(e) => setSearchQuery(e.target.value)}
+                                            placeholder="搜索 AI 智能体..."
+                                            className="w-full rounded-xl border border-border bg-background px-4 py-3 pl-10 text-sm focus:outline-none focus:ring-2 focus:ring-primary/20"
+                                        />
+                                    </div>
+
+                                    <div className="flex items-center gap-4 overflow-x-auto pb-2 md:pb-0">
+                                        <div className="flex items-center gap-2 shrink-0">
+                                            <Filter className="h-4 w-4 text-muted-foreground" />
+                                            <div className="flex items-center gap-1">
+                                                {sortOptions.map((option) => (
+                                                    <button
+                                                        key={option.id}
+                                                        onClick={() => setSortBy(option.id)}
+                                                        className={cn(
+                                                            "flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm transition-all whitespace-nowrap",
+                                                            sortBy === option.id
+                                                                ? "bg-primary/10 text-primary font-medium"
+                                                                : "text-muted-foreground hover:text-foreground hover:bg-secondary"
+                                                        )}
+                                                    >
+                                                        {option.icon}
+                                                        <span>{option.label}</span>
+                                                    </button>
+                                                ))}
+                                            </div>
                                         </div>
-                                        <div className="flex flex-wrap gap-2">
-                                            {hotTopics.map((topic) => (
-                                                <button
-                                                    key={topic.name}
-                                                    className="flex items-center gap-2 px-4 py-2 bg-secondary hover:bg-secondary/80 text-foreground rounded-xl text-sm transition-colors group"
-                                                >
-                                                    <span>{topic.name}</span>
-                                                    <span className="text-xs bg-primary/10 text-primary px-1.5 py-0.5 rounded-full">
-                                                        {topic.count}
-                                                    </span>
-                                                </button>
-                                            ))}
-                                            <button className="px-4 py-2 text-primary hover:text-primary/80 text-sm font-medium">
-                                                更多话题 →
+                                        <div className="flex items-center gap-2 shrink-0">
+                                            <button
+                                                onClick={() => setViewMode("grid")}
+                                                className={cn(
+                                                    "p-2 rounded-lg transition-colors",
+                                                    viewMode === "grid" ? "bg-primary/10 text-primary" : "hover:bg-secondary"
+                                                )}
+                                            >
+                                                <Grid className="h-4 w-4" />
+                                            </button>
+                                            <button
+                                                onClick={() => setViewMode("list")}
+                                                className={cn(
+                                                    "p-2 rounded-lg transition-colors",
+                                                    viewMode === "list" ? "bg-primary/10 text-primary" : "hover:bg-secondary"
+                                                )}
+                                            >
+                                                <List className="h-4 w-4" />
                                             </button>
                                         </div>
                                     </div>
                                 </div>
 
                                 <div>
-                                    <div className="flex items-center justify-between mb-6">
-                                        <h3 className="text-xl font-bold">推荐智能体</h3>
-                                        <div className="flex items-center gap-4">
-                                            <button className="flex items-center gap-2 px-4 py-2 bg-primary hover:bg-primary/90 text-primary-foreground rounded-xl text-sm font-medium">
-                                                <Plus className="h-4 w-4" />
-                                                提交智能体
-                                            </button>
-                                        </div>
+                                    <div className="flex items-center gap-2 mb-3">
+                                        <Flame className="h-4 w-4 text-orange-500" />
+                                        <span className="text-sm font-medium">热门话题</span>
                                     </div>
-                                    <PublicAgents viewMode={viewMode} searchQuery={searchQuery} />
+                                    <div className="flex flex-wrap gap-2">
+                                        {hotTopics.map((topic) => (
+                                            <button
+                                                key={topic.name}
+                                                className="flex items-center gap-2 px-4 py-2 bg-secondary hover:bg-secondary/80 text-foreground rounded-xl text-sm transition-colors group"
+                                            >
+                                                <span>{topic.name}</span>
+                                                <span className="text-xs bg-primary/10 text-primary px-1.5 py-0.5 rounded-full">
+                                                    {topic.count}
+                                                </span>
+                                            </button>
+                                        ))}
+                                        <button className="px-4 py-2 text-primary hover:text-primary/80 text-sm font-medium">
+                                            更多话题 →
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
 
-                            <aside className="w-80 shrink-0 space-y-6 hidden xl:block">
-                                <div className="rounded-2xl border border-border bg-card p-6 shadow-sm">
-                                    <div className="flex items-center justify-between mb-6">
-                                        <div className="flex items-center gap-2">
-                                            <Flame className="h-5 w-5 text-orange-500" />
-                                            <h3 className="font-bold text-lg">热度排行榜</h3>
-                                        </div>
-                                        <TrendingUp className="h-4 w-4 text-muted-foreground" />
-                                    </div>
-                                    <div className="space-y-5">
-                                        {[
-                                            { rank: 1, name: "代码导师", score: "9,850", color: "bg-amber-500" },
-                                            { rank: 2, name: "英语口语练习助手", score: "8,920", color: "bg-slate-400" },
-                                            { rank: 3, name: "学习规划师", score: "7,540", color: "bg-orange-400" },
-                                            { rank: 4, name: "日程管家", score: "6,210", color: "bg-secondary" },
-                                            { rank: 5, name: "健身教练", score: "5,800", color: "bg-secondary" }
-                                        ].map((item) => (
-                                            <div key={item.rank} className="flex items-center gap-4 group cursor-pointer">
-                                                <div className={cn(
-                                                    "w-6 h-6 shrink-0 flex items-center justify-center rounded-full text-[10px] font-bold text-white",
-                                                    item.rank > 3 ? "bg-muted text-muted-foreground" : item.color
-                                                )}>
-                                                    {item.rank}
-                                                </div>
-                                                <div className="flex-1 min-w-0">
-                                                    <p className="text-sm font-medium truncate group-hover:text-primary transition-colors">{item.name}</p>
-                                                    <p className="text-[10px] text-muted-foreground uppercase">Popularity {item.score}</p>
-                                                </div>
-                                            </div>
-                                        ))}
+                            <div className="min-h-0 min-w-0">
+                                <div className="flex items-center justify-between mb-6">
+                                    <h3 className="text-xl font-bold">推荐智能体</h3>
+                                    <div className="flex items-center gap-4">
+                                        <button className="flex items-center gap-2 px-4 py-2 bg-primary hover:bg-primary/90 text-primary-foreground rounded-xl text-sm font-medium">
+                                            <Plus className="h-4 w-4" />
+                                            提交智能体
+                                        </button>
                                     </div>
                                 </div>
-
-                                <div className="rounded-2xl border border-dashed border-primary/40 bg-primary/5 p-6">
-                                    <div className="flex items-center gap-3 mb-4">
-                                        <div className="p-2 rounded-lg bg-primary/10 text-primary">
-                                            <Rocket className="h-5 w-5" />
-                                        </div>
-                                        <h3 className="font-bold">快速开始</h3>
-                                    </div>
-                                    <p className="text-sm text-muted-foreground mb-4">创建你的第一个AI智能体，仅需3分钟</p>
-                                    <button className="w-full py-3 bg-primary hover:bg-primary/90 text-primary-foreground rounded-xl font-medium transition-colors text-white">
-                                        立即创建
-                                    </button>
-                                </div>
-                            </aside>
+                                <PublicAgents viewMode={viewMode} searchQuery={searchQuery} />
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -379,7 +363,7 @@ export default function AgentBuilderPage() {
             return <PersonalLibraryContent />;
         }
 
-        // 其他视图
+        // 其他视图：严格恢复原始插图片格式
         const imageMap: Record<string, string> = {
             "favorites": "收藏夹.jpg",
             "agents": "智能体.jpg",
@@ -406,7 +390,7 @@ export default function AgentBuilderPage() {
 
             <div className="flex-1 flex pt-14 min-h-0 overflow-hidden">
                 {/* 左侧侧边栏 */}
-                <div className="w-64 border-r border-border bg-card flex flex-col flex-shrink-0">
+                <div className="hidden lg:flex w-64 border-r border-border bg-card flex-col flex-shrink-0">
                     <div className="flex-1 overflow-y-auto p-4 space-y-4 text-left">
 
                         {/* 第一部分：智能体广场 */}
@@ -449,14 +433,12 @@ export default function AgentBuilderPage() {
                                         active={activeView === "agents"}
                                         onClick={() => setActiveView("agents")}
                                     />
-                                    {/* 公共知识库 - 更名 */}
                                     <SidebarItem
                                         icon={<Database className="h-4 w-4" />}
                                         label="公共知识库"
                                         active={activeView === "knowledge"}
                                         onClick={() => setActiveView("knowledge")}
                                     />
-                                    {/* 个人知识库 - 新增 */}
                                     <SidebarItem
                                         icon={<HardDrive className="h-4 w-4" />}
                                         label="个人知识库"
@@ -493,7 +475,7 @@ export default function AgentBuilderPage() {
                 </div>
 
                 {/* 右侧主内容区 */}
-                <div className="flex-1 flex flex-col min-0 bg-muted/5">
+                <div className="flex-1 flex flex-col min-w-0 bg-muted/5 overflow-hidden">
                     {renderContent()}
                 </div>
             </div>
@@ -524,7 +506,7 @@ function SidebarItem({
             )}
         >
             <span className={cn(active ? "text-primary" : "text-muted-foreground/70")}>{icon}</span>
-            <span>{label}</span>
+            <span className="truncate">{label}</span>
         </button>
     );
 }
