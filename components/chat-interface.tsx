@@ -261,7 +261,7 @@ export function LandingSearch({ onStart }: { onStart: () => void }) {
             教育，在此<span className="font-semibold text-primary">无缝连接</span>
           </h1>
           <p className="text-foreground/50 text-base font-normal max-w-md mx-auto leading-relaxed">
-            覆盖师生全场景的一站式智能空间，让学术更纯粹
+            覆盖师生全场景的一站式智能空间
           </p>
         </div>
 

@@ -29,7 +29,7 @@ export default function ServicesPage() {
 
     const menuItems = [
         { id: 'home', label: '首页', icon: Home },
-        { id: 'consult', label: '咨询中心', icon: MessageSquare },
+        { id: 'consult', label: '咨讯中心', icon: MessageSquare },
         { id: 'hall', label: '服务大厅', icon: LayoutGrid },
         { id: 'system', label: '业务系统', icon: Monitor },
     ];
